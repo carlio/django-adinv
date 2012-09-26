@@ -39,5 +39,23 @@ class AdSlot(models.Model):
     dimensions = models.ForeignKey(SlotDimensions, null=True)
     enabled = models.BooleanField(default=False)
     
+    ad_chooser = models.CharField(max_length=100)
+    
+    def get_possible_adverts(self):
+        return Advert.objects.filter(enabled=True, dimensions=self.dimensions)
+    
     def __unicode__(self):
         return self.slot_name
+    
+    
+class Advert(models.Model):
+
+    name = models.CharField(max_length=200)    
+    dimensions = models.ForeignKey(SlotDimensions)
+    code = models.TextField()
+    enabled = models.BooleanField(default=True)
+    
+    def __unicode__(self):
+        return self.name
+
+
