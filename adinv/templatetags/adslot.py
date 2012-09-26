@@ -1,7 +1,9 @@
 from django import template
 from django.template import Library, Node, TemplateSyntaxError
+from adinv.models import AdSlot
 
 register = Library()
+
 
 class AdSlotNode(Node):
     def __init__(self, slot_name, *arguments):
@@ -13,9 +15,12 @@ class AdSlotNode(Node):
             slot_name = template.Variable(self.slot_name)
             slot_name = slot_name.resolve(context)
         except template.VariableDoesNotExist:
-            return 'noes!'
+            raise ValueError
         
-        return slot_name
+        try:
+            return AdSlot.objects.get_for_name(slot_name=slot_name)
+        except AdSlot.DoesNotExist:
+            raise ValueError
         
     def render(self, context):
         slot = self._get_slot(context)
