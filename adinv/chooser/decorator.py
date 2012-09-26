@@ -1,7 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
-
-registered_choosers = {}
-
+from adinv.chooser.registry import registered_choosers
 
 def chooser(name=None):
     name_or_function = name # used to make the keyword argument nicer

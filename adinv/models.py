@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from adinv.chooser.registry import get_chooser, registered_choosers
 
 
 class SlotDimensions(models.Model):
@@ -30,6 +31,8 @@ class AdSlotManager(models.Manager):
             return AdSlot.objects.create(slot_name=slot_name, enabled=False)
         
     
+    
+_chooser_choices = [ (key, key) for key in registered_choosers.keys() ]
 
 class AdSlot(models.Model):
     
@@ -39,10 +42,12 @@ class AdSlot(models.Model):
     dimensions = models.ForeignKey(SlotDimensions, null=True)
     enabled = models.BooleanField(default=False)
     
-    ad_chooser = models.CharField(max_length=100)
+    ad_chooser = models.CharField(max_length=100, choices=_chooser_choices)
     
-    def get_possible_adverts(self):
-        return Advert.objects.filter(enabled=True, dimensions=self.dimensions)
+    def get_advert(self, *args, **kwargs):
+        adverts = Advert.objects.filter(enabled=True, dimensions=self.dimensions)
+        chooser = get_chooser(self.ad_chooser)
+        return chooser(self, adverts, *args, **kwargs)
     
     def __unicode__(self):
         return self.slot_name

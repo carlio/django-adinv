@@ -1,6 +1,7 @@
 from django import template
 from django.template import Library, Node, TemplateSyntaxError
 from adinv.models import AdSlot
+from django.template.loader import render_to_string
 
 register = Library()
 
@@ -24,7 +25,15 @@ class AdSlotNode(Node):
         
     def render(self, context):
         slot = self._get_slot(context)
-        return u'ADVERT! %s' % slot
+        if not slot.enabled:
+            return ''
+        
+        advert = slot.get_advert(*self.arguments, **{})
+        if advert is None:
+            return ''
+        
+        local_ctx = {'slot': slot, 'advert': advert }
+        return render_to_string('adinv/adslot.html', local_ctx, context)
 
 
 @register.tag("adslot")
@@ -39,3 +48,4 @@ def adslot(parser, token):
     print type(slot_name), slot_name
     print type(parts[1]), parts[1]
     return AdSlotNode(slot_name, *arguments)
+
