@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+import datetime
+from south.db import db
+from south.v2 import SchemaMigration
+from django.db import models
+
+
+class Migration(SchemaMigration):
+
+    def forwards(self, orm):
+        # Adding model 'AdDimensions'
+        db.create_table('adinv_addimensions', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('width', self.gf('django.db.models.fields.SmallIntegerField')()),
+            ('height', self.gf('django.db.models.fields.SmallIntegerField')()),
+        ))
+        db.send_create_signal('adinv', ['AdDimensions'])
+
+        # Adding model 'AdSlot'
+        db.create_table('adinv_adslot', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('slot_name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+            ('dimensions', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['adinv.AdDimensions'])),
+        ))
+        db.send_create_signal('adinv', ['AdSlot'])
+
+
+    def backwards(self, orm):
+        # Deleting model 'AdDimensions'
+        db.delete_table('adinv_addimensions')
+
+        # Deleting model 'AdSlot'
+        db.delete_table('adinv_adslot')
+
+
+    models = {
+        'adinv.addimensions': {
+            'Meta': {'object_name': 'AdDimensions'},
+            'height': ('django.db.models.fields.SmallIntegerField', [], {}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'width': ('django.db.models.fields.SmallIntegerField', [], {})
+        },
+        'adinv.adslot': {
+            'Meta': {'object_name': 'AdSlot'},
+            'dimensions': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['adinv.AdDimensions']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'slot_name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
+        }
+    }
+
+    complete_apps = ['adinv']

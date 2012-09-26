@@ -1,0 +1,5 @@
+#!/bin/bash
+COMMAND=$1
+shift
+.env/bin/django-admin.py $COMMAND --settings=adinv.tests.settings $@
+
