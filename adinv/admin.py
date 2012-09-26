@@ -3,8 +3,8 @@ from adinv.models import AdSlot, SlotDimensions
 
 
 class AdSlotAdmin(admin.ModelAdmin):
-    list_filter = ('automatically_created',)
-    list_display = ('slot_name', 'dimensions', 'automatically_created')
+    list_filter = ('enabled',)
+    list_display = ('slot_name', 'dimensions', 'enabled')
 
 admin.site.register(AdSlot, AdSlotAdmin)
 
