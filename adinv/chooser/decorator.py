@@ -20,16 +20,20 @@ def chooser(name=None):
     elif callable(name_or_function):
         # this was used like '@chooser', so the argument
         # is a function
-        func_name = name_or_function.__name__
         func = name_or_function
+        registered_choosers[func.__name__] = func
+        return func
     
     else:
         # this was used like '@chooser("fish")'
+        # it needs to record the name and return a function which
+        # can be called later to invoke the wrapped function
         func_name = name_or_function
-        def dec(func):
-            print func
-            return func
-        func = dec
-    
-    registered_choosers[func_name] = func
-    return func
+
+        def dec(wrapped):
+            registered_choosers[func_name] = wrapped        
+            def call_wrapped(request, *args, **kwargs):
+                return wrapped(request, *args, **kwargs)
+            return call_wrapped
+        
+        return dec

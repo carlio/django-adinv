@@ -16,6 +16,7 @@ class DecoratorTest(unittest.TestCase):
         self.assertTrue('chooser_without_calling' in registered_choosers)
         self.assertEqual('test_output_1', registered_choosers['chooser_without_calling'](None) )
 
+
     def test_with_name(self):
         """
         Tests that the `chooser` decorator honours the 'name=' argument
@@ -23,11 +24,11 @@ class DecoratorTest(unittest.TestCase):
         """
         @chooser(name='lovely')
         def chooser_explicitly_named(slot, *args):
-            print 'cockls'
             return 'test_output_2'
         
         self.assertTrue('lovely' in registered_choosers)
         self.assertEqual('test_output_2', registered_choosers['lovely'](None) )
+
 
     def test_without_name(self):
         """
