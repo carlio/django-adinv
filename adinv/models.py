@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from adinv.chooser.registry import get_chooser, registered_choosers
+import logging
 
 
 class SlotDimensions(models.Model):
@@ -47,6 +48,9 @@ class AdSlot(models.Model):
     def get_advert(self, *args, **kwargs):
         adverts = Advert.objects.filter(enabled=True, dimensions=self.dimensions)
         chooser = get_chooser(self.ad_chooser)
+        if chooser is None:
+            logging.debug('Could not find ad chooser %s' % self.ad_chooser)
+            return None
         return chooser(self, adverts, *args, **kwargs)
     
     def __unicode__(self):
