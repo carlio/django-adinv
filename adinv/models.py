@@ -64,3 +64,11 @@ class Advert(models.Model):
         return self.name
 
 
+class Impression(models.Model):
+    advert = models.ForeignKey(Advert)
+    adslot = models.ForeignKey(AdSlot)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    
+class Click(models.Model):
+    impression = models.ForeignKey(Impression)

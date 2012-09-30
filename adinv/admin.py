@@ -1,5 +1,5 @@
 from django.contrib import admin
-from adinv.models import AdSlot, SlotDimensions, Advert
+from adinv.models import AdSlot, SlotDimensions, Advert, Impression, Click
 
 
 class AdSlotAdmin(admin.ModelAdmin):
@@ -17,3 +17,7 @@ class AdvertAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(Advert, AdvertAdmin)
+
+
+admin.site.register(Impression)
+admin.site.register(Click)
