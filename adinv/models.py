@@ -65,6 +65,8 @@ class Advert(models.Model):
     code = models.TextField()
     enabled = models.BooleanField(default=True)
     
+    destination_url = models.CharField(max_length=500)
+    
     def get_absolute_url(self):
         return reverse('advert_detail', args=[self.id])
 
@@ -77,6 +79,13 @@ class Impression(models.Model):
     adslot = models.ForeignKey(AdSlot)
     timestamp = models.DateTimeField(auto_now_add=True)
     
+    def __unicode__(self):
+        return '%s in %s at %s' % (self.advert, self.adslot, self.timestamp)
+    
     
 class Click(models.Model):
     impression = models.ForeignKey(Impression)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return '%s in %s at %s' % (self.impression.advert, self.impression.adslot, self.timestamp)

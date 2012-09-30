@@ -34,6 +34,11 @@ class AdvertAdmin(admin.ModelAdmin):
 
 admin.site.register(Advert, AdvertAdmin)
 
+class ImpressionAdmin(admin.ModelAdmin):
+    fields = ( 'adslot', 'advert' )
+    readonly_fields = ('timestamp', )
+    list_filter = ( 'adslot', 'advert', 'timestamp')
+    list_display = ( 'adslot', 'advert', 'timestamp')
 
-admin.site.register(Impression)
+admin.site.register(Impression, ImpressionAdmin)
 admin.site.register(Click)
