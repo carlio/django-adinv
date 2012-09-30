@@ -8,9 +8,7 @@
   </head>
   
   <body>
-    <a target='_top' href='{% url advert_click impression.id %}'>
-      {{ advert.code|safe }}
-    </a>
+    {% block content %}{% endblock %}
   </body>
 
 </html>

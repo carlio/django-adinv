@@ -1,5 +1,6 @@
 from django.contrib import admin
-from adinv.models import AdSlot, SlotDimensions, Advert, Impression, Click
+from adinv.models import AdSlot, SlotDimensions, Impression, Click,\
+    JSAdvert, SimpleImageAdvert
 
 
 
@@ -32,7 +33,8 @@ admin.site.register(SlotDimensions, SlotDimensionsAdmin)
 class AdvertAdmin(admin.ModelAdmin):
     actions = (enable, disable)
 
-admin.site.register(Advert, AdvertAdmin)
+admin.site.register(SimpleImageAdvert, AdvertAdmin)
+admin.site.register(JSAdvert, AdvertAdmin)
 
 class ImpressionAdmin(admin.ModelAdmin):
     fields = ( 'adslot', 'advert' )

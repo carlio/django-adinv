@@ -33,7 +33,8 @@ for scheme in INSTALL_SCHEMES.values():
     
 # common dependencies
 _install_requires = [
-            'django',
+            'django>=1.3',
+            'django-gubbins<1',
        ]
 
 setup( name='django-adinv',

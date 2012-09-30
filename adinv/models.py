@@ -1,8 +1,9 @@
-from django.db import models
-from django.conf import settings
 from adinv.chooser.registry import get_chooser, registered_choosers
-import logging
+from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db import models
+from gubbins.db.manager import InheritanceManager
+import logging
 
 
 class SlotDimensions(models.Model):
@@ -60,18 +61,29 @@ class AdSlot(models.Model):
     
 class Advert(models.Model):
 
+    objects = InheritanceManager()
+
     name = models.CharField(max_length=200)    
     dimensions = models.ForeignKey(SlotDimensions)
-    code = models.TextField()
     enabled = models.BooleanField(default=True)
-    
-    destination_url = models.CharField(max_length=500)
     
     def get_absolute_url(self):
         return reverse('advert_detail', args=[self.id])
 
     def __unicode__(self):
         return self.name
+    
+    
+class SimpleImageAdvert(Advert):
+    track_clicks = models.BooleanField(default=True)
+    destination_url = models.CharField(max_length=500)
+    
+    template_name = 'adinv/simple_image_advert_detail.html'
+    
+class JSAdvert(Advert):
+    code = models.TextField()
+    
+    template_name = 'adinv/advert_detail.html'
 
 
 class Impression(models.Model):
