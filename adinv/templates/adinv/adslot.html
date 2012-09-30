@@ -1,3 +1,7 @@
-<div id='slot-{{ slot.slot_name }}' class='slot slot-dimensions-{{ slot.dimensions.name }}'>
-  {{ advert.code|safe }}
+<div id='slot-{{ slot.slot_name }}' 
+     class='slot slot-dimensions-{{ slot.dimensions.name }}'>
+
+  <iframe class='slot-iframe' style='width: 100%; height: 100%; border: 0'
+          src='{{ advert.get_absolute_url }}'></iframe>
+          
 </div>

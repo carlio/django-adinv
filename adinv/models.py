@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from adinv.chooser.registry import get_chooser, registered_choosers
 import logging
+from django.core.urlresolvers import reverse
 
 
 class SlotDimensions(models.Model):
@@ -64,6 +65,9 @@ class Advert(models.Model):
     code = models.TextField()
     enabled = models.BooleanField(default=True)
     
+    def get_absolute_url(self):
+        return reverse('advert_detail', args=[self.id])
+
     def __unicode__(self):
         return self.name
 
