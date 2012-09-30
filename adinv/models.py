@@ -77,6 +77,7 @@ class Advert(models.Model):
 class SimpleImageAdvert(Advert):
     track_clicks = models.BooleanField(default=True)
     destination_url = models.CharField(max_length=500)
+    image = models.ImageField(upload_to=settings.ADINV_IMAGE_PATH)
     
     template_name = 'adinv/simple_image_advert_detail.html'
     

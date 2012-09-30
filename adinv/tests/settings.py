@@ -12,6 +12,8 @@ for app in _optional:
 
 PROJECT_APPS = ['adinv']
 
+ADINV_IMAGE_PATH = '/tmp/adinv'
+
 DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',

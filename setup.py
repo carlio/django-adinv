@@ -34,6 +34,7 @@ for scheme in INSTALL_SCHEMES.values():
 # common dependencies
 _install_requires = [
             'django>=1.3',
+            'Pillow', # TODO: make this an optional dependency
             'django-gubbins<1',
        ]
 
