@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from gubbins.db.manager import InheritanceManager
 import logging
+from django.core.files.storage import FileSystemStorage
 
 
 class SlotDimensions(models.Model):
@@ -73,18 +74,21 @@ class Advert(models.Model):
     def __unicode__(self):
         return self.name
     
-    
+
+
 class SimpleImageAdvert(Advert):
     track_clicks = models.BooleanField(default=True)
     destination_url = models.CharField(max_length=500)
-    image = models.ImageField(upload_to=settings.ADINV_IMAGE_PATH)
+    image = models.ImageField(upload_to=getattr(settings, 'ADINV_IMAGE_MEDIA_PREFIX', 'admedia'),
+                              storage=FileSystemStorage(location=getattr(settings, 'ADINV_IMAGE_MEDIA_ROOT', settings.MEDIA_ROOT), 
+                                                        base_url=getattr(settings, 'ADINV_IMAGE_MEDIA_URL', settings.MEDIA_URL)))
     
     template_name = 'adinv/simple_image_advert_detail.html'
     
 class JSAdvert(Advert):
     code = models.TextField()
     
-    template_name = 'adinv/advert_detail.html'
+    template_name = 'adinv/js_advert_detail.html'
 
 
 class Impression(models.Model):
