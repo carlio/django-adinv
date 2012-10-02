@@ -8,9 +8,10 @@ register = Library()
 
 
 class AdSlotNode(Node):
-    def __init__(self, slot_name, *arguments):
+    def __init__(self, slot_name, *arguments, **kwargs):
         self.slot_name = slot_name
         self.arguments = arguments
+        self.keyword_arguments = kwargs
 
     def _get_slot(self, context):
         try:
@@ -30,7 +31,7 @@ class AdSlotNode(Node):
             logging.debug('Ad slot %s is disabled' % slot)
             return ''
         
-        advert = slot.get_advert(*self.arguments, **{})
+        advert = slot.get_advert(*self.arguments, **self.keyword_arguments)
         if advert is None:
             logging.debug('Could not get any adverts for %s' % slot)
             return ''
@@ -50,3 +51,12 @@ def adslot(parser, token):
     arguments = parts[1:]
     return AdSlotNode(slot_name, *arguments)
 
+
+def adslot_string(slot_name, *args, **kwargs):
+    """
+    Utility method to render an adslot as a string, for use
+    when templates and therefore template tags are not being used 
+    """
+    # need to wrap the slot name with quotes so that it is properly
+    # resolved in the node
+    return AdSlotNode("'%s'" % slot_name, *args, **kwargs).render({})
