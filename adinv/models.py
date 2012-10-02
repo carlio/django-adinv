@@ -79,7 +79,7 @@ class Advert(models.Model):
 class SimpleImageAdvert(Advert):
     track_clicks = models.BooleanField(default=True)
     destination_url = models.CharField(max_length=500)
-    image = models.ImageField(upload_to=getattr(settings, 'ADINV_IMAGE_MEDIA_PREFIX', 'admedia'),
+    image = models.ImageField(upload_to=getattr(settings, 'ADINV_IMAGE_MEDIA_PREFIX', 'inventory'),
                               storage=FileSystemStorage(location=getattr(settings, 'ADINV_IMAGE_MEDIA_ROOT', settings.MEDIA_ROOT), 
                                                         base_url=getattr(settings, 'ADINV_IMAGE_MEDIA_URL', settings.MEDIA_URL)))
     
