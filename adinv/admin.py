@@ -1,6 +1,6 @@
 from django.contrib import admin
 from adinv.models import AdSlot, SlotDimensions, Impression, Click,\
-    JSAdvert, SimpleImageAdvert
+    JSAdvert, SimpleImageAdvert, AdvertConfigValue
 
 
 
@@ -29,9 +29,12 @@ class SlotDimensionsAdmin(admin.ModelAdmin):
 admin.site.register(SlotDimensions, SlotDimensionsAdmin)
 
 
+class AdvertConfigInline(admin.TabularInline):
+    model = AdvertConfigValue
 
 class AdvertAdmin(admin.ModelAdmin):
     actions = (enable, disable)
+    inlines = (AdvertConfigInline,)
 
 admin.site.register(SimpleImageAdvert, AdvertAdmin)
 admin.site.register(JSAdvert, AdvertAdmin)

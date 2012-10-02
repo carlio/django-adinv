@@ -50,10 +50,18 @@ class AdSlot(models.Model):
     
     def get_advert(self, *args, **kwargs):
         adverts = Advert.objects.filter(enabled=True, dimensions=self.dimensions)
+        
+        if adverts.count() == 0:
+            logging.debug('No appropriate adverts available for %s' % self)
+            return None
+        
+        logging.debug("Choosing from possible adverts: %s" % adverts)
+        
         chooser = get_chooser(self.ad_chooser)
         if chooser is None:
             logging.debug('Could not find ad chooser %s' % self.ad_chooser)
             return None
+        
         return chooser(self, adverts, *args, **kwargs)
     
     def __unicode__(self):
@@ -70,6 +78,12 @@ class Advert(models.Model):
     
     def get_absolute_url(self):
         return reverse('advert_detail', args=[self.id])
+    
+    def get_config(self):
+        config = {}
+        for cfg in self.advertconfigvalue_set.all():
+            config[cfg.key] = cfg.value
+        return config
 
     def __unicode__(self):
         return self.name
@@ -89,6 +103,16 @@ class JSAdvert(Advert):
     code = models.TextField()
     
     template_name = 'adinv/js_advert_detail.html'
+
+
+
+class AdvertConfigValue(models.Model):
+    advert = models.ForeignKey(Advert)
+    key = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+    
+    def __unicode__(self):
+        return '%s=%s' % (self.key, self.value)
 
 
 class Impression(models.Model):
