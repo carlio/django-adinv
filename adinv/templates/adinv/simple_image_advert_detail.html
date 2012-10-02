@@ -1,20 +1,7 @@
-<!doctype html>
+{% extends 'adinv/base.html' %}
 
-<html>
-  <head>
-    <style>
-      body, html { margin: 0; padding: 0; }
-    </style>
-  </head>
-  
-  <body>
-    {% if advert.track_clicks %}
-      <a target='_top' href='{% url advert_click impression.id %}'>
-    {% else %}
-      <a target='_top' href='{{ advert.destination_url }}'>
-    {% endif %}
-      <img src='{{ advert.image.url }}' />
-    </a>
-  </body>
-
-</html>
+{% block content %}
+  <a target='_top' href='{{ advert.destination_url }}'>
+    <img src='{{ advert.image.url }}' />
+  </a>
+{% endblock %}
