@@ -6,9 +6,8 @@ import re
 import time
 import os
 
-_version = "0.%s.dev" % int(time.time())
+_version = "0.1.dev%s" % int(time.time())
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
-    
     
     
 # find any static content such as HTML files or CSS
@@ -35,7 +34,7 @@ for scheme in INSTALL_SCHEMES.values():
 _install_requires = [
             'django>=1.3',
             'Pillow', # TODO: make this an optional dependency
-            'django-gubbins<1',
+            'django-gubbins>=1',
        ]
 
 setup( name='django-adinv',
