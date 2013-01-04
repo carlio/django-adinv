@@ -1,23 +1,40 @@
 from django.contrib import admin
 from adinv.models import AdSlot, SlotDimensions, Impression, Click,\
     JSAdvert, SimpleImageAdvert, AdvertConfigValue
+from adinv.chooser.registry import registered_choosers
+
 
 
 
 def enable(modeladmin, request, queryset):
     queryset.update(enabled=True)
-enable.short_description = 'Enable selected'
 
 def disable(modeladmin, request, queryset):
     queryset.update(enabled=False)
-disable.short_description = 'Disable selected'
-
-
 
 class AdSlotAdmin(admin.ModelAdmin):
     list_filter = ('dimensions', 'enabled',)
     list_display = ('slot_name', 'dimensions', 'ad_chooser', 'enabled')
-    actions = (enable, disable)
+
+    def get_actions(self, request):
+        actions = super(AdSlotAdmin, self).get_actions(request)
+
+        actions['enable'] = (enable, 'enable', 'Enable selected')
+        actions['disable'] = (disable, 'disable', 'Disable selected')
+
+        for dimension in SlotDimensions.objects.all():
+            name = 'set_dimensions_to_%s' % dimension.name
+            func = lambda modeladmin, request, queryset: queryset.update(dimensions=dimension)
+            description = 'Set dimensions to %s' % dimension
+            actions[name] = (func, name, description)
+
+        for chooser in registered_choosers.keys():
+            name = 'set_chooser_to_%s' % chooser
+            func = lambda modeladmin, request, queryset: queryset.update(ad_chooser=chooser)
+            description = 'Set chooser to %s' % chooser
+            actions[name] = (func, name, description)
+
+        return actions
 
 admin.site.register(AdSlot, AdSlotAdmin)
 
