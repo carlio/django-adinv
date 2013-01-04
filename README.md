@@ -1,7 +1,9 @@
 django-adinv
 ============
 
-Ad slot inventory manager for django
+[![Build Status](https://secure.travis-ci.org/carlio/django-adinv.png)](http://travis-ci.org/carlio/django-adinv)
+
+Ad slot inventory manager for django. This is a work in progress, don't expect anything here to work particularly well!
 
 Config
 ======
