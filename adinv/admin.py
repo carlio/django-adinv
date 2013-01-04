@@ -1,8 +1,10 @@
 from django.contrib import admin
 from adinv.models import AdSlot, SlotDimensions, Impression, Click,\
-    JSAdvert, SimpleImageAdvert, AdvertConfigValue
+    JSAdvert, SimpleImageAdvert, AdvertConfigValue, AdvertProvider
 from adinv.chooser.registry import registered_choosers
 
+
+admin.site.register(AdvertProvider)
 
 
 
@@ -54,6 +56,9 @@ class AdvertConfigInline(admin.TabularInline):
 
 class AdvertAdmin(admin.ModelAdmin):
     actions = (enable, disable)
+    search_fields = ('name', 'provider')
+    list_filter = ('provider', 'dimensions', 'enabled')
+    list_display = ('name', 'dimensions', 'provider', 'enabled')
     inlines = (AdvertConfigInline,)
 
 admin.site.register(SimpleImageAdvert, AdvertAdmin)
