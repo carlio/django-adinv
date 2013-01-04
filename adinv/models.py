@@ -77,7 +77,10 @@ class Advert(models.Model):
     
     def get_absolute_url(self):
         return reverse('advert_detail', args=[self.id])
-    
+
+    def add_impression(self, adslot):
+        return Impression.objects.create(advert=self, adslot=adslot)
+
     def get_config(self):
         config = {}
         for cfg in self.advertconfigvalue_set.all():
@@ -100,6 +103,7 @@ class JSAdvert(Advert):
     code = models.TextField()
     
     template_name = 'adinv/js_advert_detail.html'
+    track_clicks = False
 
 
 
@@ -116,6 +120,9 @@ class Impression(models.Model):
     advert = models.ForeignKey(Advert)
     adslot = models.ForeignKey(AdSlot)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def add_click(self):
+        return Click.objects.create(impression=self)
     
     def __unicode__(self):
         return '%s in %s at %s' % (self.advert, self.adslot, self.timestamp)
