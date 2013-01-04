@@ -13,7 +13,8 @@ def disable(modeladmin, request, queryset):
     queryset.update(enabled=False)
 
 class AdSlotAdmin(admin.ModelAdmin):
-    list_filter = ('dimensions', 'enabled',)
+    search_fields = ('slot_name',)
+    list_filter = ('dimensions', 'ad_chooser', 'enabled',)
     list_display = ('slot_name', 'dimensions', 'ad_chooser', 'enabled')
 
     def get_actions(self, request):
@@ -24,7 +25,9 @@ class AdSlotAdmin(admin.ModelAdmin):
 
         for dimension in SlotDimensions.objects.all():
             name = 'set_dimensions_to_%s' % dimension.name
-            func = lambda modeladmin, request, queryset: queryset.update(dimensions=dimension)
+            def _inner(dimension):
+                return lambda modeladmin, request, queryset: queryset.update(dimensions=dimension)
+            func = _inner(dimension)
             description = 'Set dimensions to %s' % dimension
             actions[name] = (func, name, description)
 
