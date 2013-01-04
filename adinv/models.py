@@ -110,13 +110,13 @@ class SimpleImageAdvert(Advert):
     image = models.ImageField(upload_to=getattr(settings, 'ADINV_IMAGE_MEDIA_PREFIX', 'inventory'))
     
     template_name = 'adinv/simple_image_advert_detail.html'
+    trackable = True
     
 class JSAdvert(Advert):
     code = models.TextField()
     
     template_name = 'adinv/js_advert_detail.html'
-    track_clicks = False
-
+    trackable = False
 
 
 class AdvertConfigValue(models.Model):

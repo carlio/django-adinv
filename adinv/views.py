@@ -7,13 +7,19 @@ def slot_detail(request, slot_id):
     slot = get_object_or_404(AdSlot, pk=slot_id)
     advert = slot.get_advert(**request.GET)
 
-    if advert.track_clicks:
-        impression = advert.add_impression(slot)
-        dest_url = reverse('advert_track_click', args=[impression.id])
-    else:
-        dest_url = advert.destination_url
+    if advert.trackable:
 
-    return render(request, advert.template_name, {'advert': advert, 'dest_url': dest_url})
+        if advert.track_clicks:
+            impression = advert.add_impression(slot)
+            dest_url = reverse('advert_track_click', args=[impression.id])
+        else:
+            dest_url = advert.destination_url
+
+        return render(request, advert.template_name, {'advert': advert, 'dest_url': dest_url})
+
+    else:
+        return render(request, advert.template_name, {'advert': advert})
+
 
 def advert_track_click(request, impression_id):
     impression = get_object_or_404(Impression, pk=impression_id)
