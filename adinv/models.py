@@ -6,6 +6,13 @@ from gubbins.db.manager import InheritanceManager
 import logging
 
 
+class AdvertProvider(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.name
+
+
 class SlotDimensions(models.Model):
     class Meta:
         verbose_name_plural = "Slot dimensions"
@@ -44,12 +51,16 @@ class AdSlot(models.Model):
     slot_name = models.CharField(max_length=255, unique=True)
     dimensions = models.ForeignKey(SlotDimensions, null=True)
     enabled = models.BooleanField(default=False)
+    show_from_providers = models.ManyToManyField(AdvertProvider, null=True, blank=True)
     
     ad_chooser = models.CharField(max_length=100, choices=_chooser_choices)
     
     def get_advert(self, *args, **kwargs):
         adverts = Advert.objects.filter(enabled=True, dimensions=self.dimensions)
-        
+
+        if self.show_from_providers.all().count() > 0:
+            adverts = adverts.filter(provider__id__in=[p.id for p in self.show_from_providers.all()])
+
         if adverts.count() == 0:
             logging.debug('No appropriate adverts available for %s' % self)
             return None
@@ -74,7 +85,8 @@ class Advert(models.Model):
     name = models.CharField(max_length=200)    
     dimensions = models.ForeignKey(SlotDimensions)
     enabled = models.BooleanField(default=True)
-    
+    provider = models.ForeignKey(AdvertProvider)
+
     def get_absolute_url(self):
         return reverse('advert_detail', args=[self.id])
 
