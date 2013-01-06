@@ -143,6 +143,12 @@ class Impression(models.Model):
 class Click(models.Model):
     impression = models.ForeignKey(Impression)
     timestamp = models.DateTimeField(auto_now_add=True)
-    
+
+    def _ad_name(self):
+        return self.impression.advert.name
+
+    def _slot_name(self):
+        return self.impression.adslot.slot_name
+
     def __unicode__(self):
         return '%s in %s at %s' % (self.impression.advert, self.impression.adslot, self.timestamp)
