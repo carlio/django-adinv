@@ -1,6 +1,8 @@
 
 INSTALLED_APPS = ['adinv']
 
+SECRET_KEY='django-adinv-test-key'
+
 _optional = ['django_jenkins', 'south']
 for app in _optional:
     try:
